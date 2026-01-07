@@ -4,7 +4,7 @@ import numpy as np
 import pytest
 import torch
 
-from data_utils import (
+from src.data_utils import (
     RadioSignalDataset,
     create_binary_labels,
     filter_by_snr,

@@ -4,7 +4,7 @@ import numpy as np
 import pytest
 import torch
 
-from eval_utils import (
+from src.eval_utils import (
     DEFAULT_PAUC_MAX_FPR,
     apply_threshold,
     compare_models,

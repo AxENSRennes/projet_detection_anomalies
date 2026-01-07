@@ -97,6 +97,15 @@ pre-commit run --all-files
 
 ## References
 
-- DCASE challenge for anomalous sound detection
-- Scikit-learn outlier detection methods
+### DCASE Challenge for Anomalous Sound Detection
+Inspiration for unsupervised anomaly detection approaches:
+- [DCASE 2022 - Unsupervised Anomalous Sound Detection](https://dcase.community/challenge2022/task-unsupervised-anomalous-sound-detection-for-machine-condition-monitoring)
+- [DCASE 2023 - First-Shot Unsupervised Anomalous Sound Detection](https://dcase.community/challenge2023/task-first-shot-unsupervised-anomalous-sound-detection-for-machine-condition-monitoring)
+
+### Scikit-learn Outlier/Novelty Detection
+Apply outlier or novelty detection techniques in a latent space obtained from a deep neural network:
+- [Scikit-learn Outlier Detection Documentation](https://scikit-learn.org/stable/modules/outlier_detection.html)
+
+### Deep Learning Approaches
 - Can build on classifier from TP3 and use latent space for anomaly detection
+- Retrain networks with a strategy appropriate for anomaly detection (e.g., autoencoders, contrastive learning)

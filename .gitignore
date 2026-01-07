@@ -1,5 +1,6 @@
-test_anomalies.hdf5
-train.hdf5
+# Data files (large)
+data/raw/
+data/processed/
 
 # Python
 __pycache__/

@@ -10,7 +10,7 @@ import numpy as np
 import torch
 from torch.utils.data import DataLoader, Dataset
 
-DATA_DIR = Path(__file__).parent
+DATA_DIR = Path(__file__).parent.parent / "data" / "raw"
 KNOWN_CLASSES = set(range(6))  # Classes 0-5 are known
 ANOMALY_CLASSES = {6, 7, 8}  # Classes 6-8 are anomalies
 
