@@ -52,7 +52,12 @@ disable = [
     "C0114",  # missing-module-docstring
     "C0115",  # missing-class-docstring
     "C0116",  # missing-function-docstring
+    "C0206",  # consider-using-dict-items (style preference)
+    "C0415",  # import-outside-toplevel (needed for test matplotlib backend)
     "R0903",  # too-few-public-methods
+    "R0913",  # too-many-arguments (acceptable for report functions)
+    "R0914",  # too-many-locals (acceptable for report functions)
+    "R0917",  # too-many-positional-arguments
     "W0621",  # redefined-outer-name (common in __main__ blocks)
     "E1101",  # no-member (false positives with h5py)
 ]
