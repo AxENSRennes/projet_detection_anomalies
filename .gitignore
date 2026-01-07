@@ -1,1 +1,12 @@
 test_anomalies.hdf5
+train.hdf5
+
+# Python
+__pycache__/
+*.pyc
+.ipynb_checkpoints/
+
+# Model checkpoints
+*.pt
+*.pth
+checkpoints/
