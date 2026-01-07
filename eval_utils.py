@@ -11,9 +11,10 @@ import numpy as np
 import pandas as pd
 import torch
 from sklearn.metrics import (
+    ConfusionMatrixDisplay,
     accuracy_score,
     auc,
-    confusion_matrix,
+    average_precision_score,
     f1_score,
     precision_recall_curve,
     precision_score,
@@ -112,36 +113,14 @@ def compute_pauc(
     """
     y_true = to_numpy(y_true)
     scores = to_numpy(scores)
-
-    fpr, tpr, _ = roc_curve(y_true, scores)
-
-    # Find indices where FPR <= max_fpr
-    idx = fpr <= max_fpr
-    fpr_partial = fpr[idx]
-    tpr_partial = tpr[idx]
-
-    # If we don't reach max_fpr exactly, interpolate
-    if fpr_partial[-1] < max_fpr:
-        # Find the next point after max_fpr for interpolation
-        idx_next = np.searchsorted(fpr, max_fpr)
-        if idx_next < len(fpr):
-            # Linear interpolation
-            fpr_lo, fpr_hi = fpr[idx_next - 1], fpr[idx_next]
-            tpr_lo, tpr_hi = tpr[idx_next - 1], tpr[idx_next]
-            tpr_interp = tpr_lo + (tpr_hi - tpr_lo) * (max_fpr - fpr_lo) / (fpr_hi - fpr_lo)
-            fpr_partial = np.append(fpr_partial, max_fpr)
-            tpr_partial = np.append(tpr_partial, tpr_interp)
-
-    # Compute partial AUC and normalize by max_fpr
-    partial_auc = auc(fpr_partial, tpr_partial)
-    return partial_auc / max_fpr
+    return roc_auc_score(y_true, scores, max_fpr=max_fpr)
 
 
 def compute_precision_recall_auc(
     y_true: np.ndarray | torch.Tensor, scores: np.ndarray | torch.Tensor
 ) -> float:
     """
-    Compute Area Under the Precision-Recall Curve.
+    Compute Area Under the Precision-Recall Curve (Average Precision).
 
     Better metric for imbalanced datasets.
 
@@ -150,13 +129,11 @@ def compute_precision_recall_auc(
         scores: Anomaly scores (higher = more anomalous)
 
     Returns:
-        PR AUC score
+        Average Precision score
     """
     y_true = to_numpy(y_true)
     scores = to_numpy(scores)
-
-    precision, recall, _ = precision_recall_curve(y_true, scores)
-    return auc(recall, precision)
+    return average_precision_score(y_true, scores)
 
 
 # =============================================================================
@@ -442,30 +419,15 @@ def plot_confusion_matrix(
     if ax is None:
         _, ax = plt.subplots(figsize=(6, 5))
 
-    cm = confusion_matrix(y_true, y_pred)
-
-    if normalize:
-        cm = cm.astype(float) / cm.sum(axis=1, keepdims=True)
-        fmt = ".2%"
-    else:
-        fmt = "d"
-
-    im = ax.imshow(cm, cmap="Blues")
-    ax.figure.colorbar(im, ax=ax)
-
-    # Add text annotations
-    for i in range(2):
-        for j in range(2):
-            val = cm[i, j]
-            text = f"{val:{fmt}}" if normalize else f"{val}"
-            ax.text(j, i, text, ha="center", va="center", fontsize=14)
-
-    ax.set_xticks([0, 1])
-    ax.set_yticks([0, 1])
-    ax.set_xticklabels(["Normal", "Anomaly"])
-    ax.set_yticklabels(["Normal", "Anomaly"])
-    ax.set_xlabel("Predicted")
-    ax.set_ylabel("True")
+    normalize_param = "true" if normalize else None
+    ConfusionMatrixDisplay.from_predictions(
+        y_true,
+        y_pred,
+        display_labels=["Normal", "Anomaly"],
+        normalize=normalize_param,
+        cmap="Blues",
+        ax=ax,
+    )
     ax.set_title("Confusion Matrix")
 
     if save_path is not None:
