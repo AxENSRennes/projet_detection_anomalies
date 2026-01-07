@@ -3,18 +3,16 @@ Data utilities for the Anomaly Detection project.
 Loads radio signal data from HDF5 files and provides PyTorch Dataset/DataLoader support.
 """
 
-import os
 from pathlib import Path
 
 import h5py
 import numpy as np
 import torch
-from torch.utils.data import Dataset, DataLoader
-
+from torch.utils.data import DataLoader, Dataset
 
 DATA_DIR = Path(__file__).parent
 KNOWN_CLASSES = set(range(6))  # Classes 0-5 are known
-ANOMALY_CLASSES = {6, 7, 8}    # Classes 6-8 are anomalies
+ANOMALY_CLASSES = {6, 7, 8}  # Classes 6-8 are anomalies
 
 
 def load_hdf5_data(filepath: str) -> tuple[np.ndarray, np.ndarray, np.ndarray]:
@@ -30,21 +28,21 @@ def load_hdf5_data(filepath: str) -> tuple[np.ndarray, np.ndarray, np.ndarray]:
         - labels: (N,) int8 - class labels
         - snr: (N,) int16 - Signal-to-Noise Ratio in dB
     """
-    with h5py.File(filepath, 'r') as f:
-        signals = f['signaux'][:]
-        labels = f['labels'][:]
-        snr = f['snr'][:]
+    with h5py.File(filepath, "r") as f:
+        signals = f["signaux"][:]
+        labels = f["labels"][:]
+        snr = f["snr"][:]
     return signals, labels, snr
 
 
 def load_train_data() -> tuple[np.ndarray, np.ndarray, np.ndarray]:
     """Load training data from train.hdf5 (classes 0-5)."""
-    return load_hdf5_data(DATA_DIR / 'train.hdf5')
+    return load_hdf5_data(DATA_DIR / "train.hdf5")
 
 
 def load_test_anomalies() -> tuple[np.ndarray, np.ndarray, np.ndarray]:
     """Load test anomalies data (classes 0-8, with 6-8 being anomalies)."""
-    return load_hdf5_data(DATA_DIR / 'test_anomalies.hdf5')
+    return load_hdf5_data(DATA_DIR / "test_anomalies.hdf5")
 
 
 def create_binary_labels(labels: np.ndarray) -> np.ndarray:
@@ -61,10 +59,7 @@ def create_binary_labels(labels: np.ndarray) -> np.ndarray:
 
 
 def filter_by_snr(
-    signals: np.ndarray,
-    labels: np.ndarray,
-    snr: np.ndarray,
-    target_snr: int | list[int]
+    signals: np.ndarray, labels: np.ndarray, snr: np.ndarray, target_snr: int | list[int]
 ) -> tuple[np.ndarray, np.ndarray, np.ndarray]:
     """
     Filter data by SNR value(s).
@@ -88,11 +83,7 @@ class RadioSignalDataset(Dataset):
     """PyTorch Dataset for radio signals."""
 
     def __init__(
-        self,
-        signals: np.ndarray,
-        labels: np.ndarray,
-        snr: np.ndarray,
-        binary_labels: bool = False
+        self, signals: np.ndarray, labels: np.ndarray, snr: np.ndarray, binary_labels: bool = False
     ):
         """
         Args:
@@ -152,7 +143,7 @@ def get_test_loader(batch_size: int = 32, binary_labels: bool = True, **kwargs) 
     return DataLoader(dataset, batch_size=batch_size, shuffle=False, **kwargs)
 
 
-if __name__ == '__main__':
+if __name__ == "__main__":
     # Quick test
     print("Loading test anomalies data...")
     signals, labels, snr = load_test_anomalies()

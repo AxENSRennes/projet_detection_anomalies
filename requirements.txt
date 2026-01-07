@@ -1,0 +1,13 @@
+# Core dependencies
+h5py
+numpy
+torch
+scikit-learn
+matplotlib
+
+# Development
+pytest
+pytest-cov
+ruff
+pylint
+pre-commit

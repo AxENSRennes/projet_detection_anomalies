@@ -74,6 +74,26 @@ HDF5 structure:
 ## Code
 
 - `data_utils.py` - Data loading utilities with PyTorch Dataset/DataLoader support
+- `tests/` - Pytest tests
+
+## Development
+
+```bash
+# Install dependencies
+pip install -r requirements.txt
+
+# Run tests
+pytest tests/
+
+# Linting & formatting
+ruff check . --fix
+ruff format .
+pylint *.py tests/
+
+# Pre-commit hooks (auto-run on git commit)
+pre-commit install
+pre-commit run --all-files
+```
 
 ## References
 

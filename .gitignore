@@ -10,3 +10,7 @@ __pycache__/
 *.pt
 *.pth
 checkpoints/
+
+# Test/lint cache
+.pytest_cache/
+.ruff_cache/
